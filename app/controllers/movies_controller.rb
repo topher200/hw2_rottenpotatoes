@@ -7,11 +7,16 @@ class MoviesController < ApplicationController
   end
 
   def index
-    # Sort on any recognized params
-    if ['title', 'release_date'].include?(params[:sort_by])
-      sort_by = params[:sort_by]
+    @all_ratings = ['G','PG','PG-13','R','NC-17']
+
+    # Get all movies that match the desired ratings
+    @movies = Movie.movies_with_ratings(params[:ratings])
+
+    # Sort the movies
+    sort_by = params[:sort_by]
+    if ['title', 'release_date'].include?(sort_by)
+      @movies = @movies.sort { |x,y| x[sort_by] <=> y[sort_by] }
     end
-    @movies = Movie.all(:order => sort_by)
   end
 
   def new
