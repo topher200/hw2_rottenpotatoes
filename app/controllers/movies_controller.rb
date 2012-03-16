@@ -7,14 +7,16 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if params[:ratings] != nil
-      # User set a ratings filter, use it!
-      session[:ratings] = params[:ratings]
-    elsif session[:ratings] != nil
-      # User set a ratings filter before, but it didn't come through this
-      # time. Add it to the URL and try again.
-      redirect_to movies_path(:ratings => session[:ratings],
-                              :sort_by => params[:sort_by])
+    [:sort_by, :ratings].each do |param|
+      if params[param] != nil
+        # User set the param, save and use the new one
+        session[param] = params[param]
+      elsif session[param] != nil
+        # User set a ratings filter before, but it didn't come through this
+        # time. Add it to the URL and try again.
+        redirect_to movies_path(:ratings => session[:ratings],
+                                :sort_by => session[:sort_by])
+      end
     end
     
     @all_ratings = ['G','PG','PG-13','R','NC-17']
