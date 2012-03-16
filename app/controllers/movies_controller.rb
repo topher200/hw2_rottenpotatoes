@@ -10,7 +10,11 @@ class MoviesController < ApplicationController
     @all_ratings = ['G','PG','PG-13','R','NC-17']
 
     # Get all movies that match the desired ratings
-    @movies = Movie.movies_with_ratings(params[:ratings])
+    if params[:ratings] != nil
+      session[:ratings] = params[:ratings]
+    end
+    @checked_ratings = session[:ratings]
+    @movies = Movie.movies_with_ratings(@checked_ratings)
 
     # Sort the movies
     sort_by = params[:sort_by]

@@ -5,7 +5,12 @@
   Include: 
   - @all_ratings.each do |rating|
     = rating
-    = check_box_tag "ratings[#{rating}]"
+    // Check the box if it was checked before
+    - if @checked_ratings then
+      = check_box_tag "ratings[#{rating}]", 'yes', |
+        @checked_ratings.keys.include?(rating)
+    - else
+      = check_box_tag "ratings[#{rating}]", 'yes'
   = submit_tag 'Refresh'
     
 %table#movies
