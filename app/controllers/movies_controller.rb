@@ -7,13 +7,22 @@ class MoviesController < ApplicationController
   end
 
   def index
+    if params[:ratings] != nil
+      # User set a ratings filter, use it!
+      puts 'Using new ratings'
+      session[:ratings] = params[:ratings]
+    else session[:ratings] != nil
+      # User set a ratings filter before, but it didn't come through this
+      # time. Add it to the URL and try again.
+      puts 'Using saved ratings'
+      redirect_to movies_path(:ratings => session[:ratings],
+                              :sort_by => params[:sort_by])
+    end
+    
     @all_ratings = ['G','PG','PG-13','R','NC-17']
 
-    # Get all movies that match the desired ratings
-    if params[:ratings] != nil
-      session[:ratings] = params[:ratings]
-    end
-    @checked_ratings = session[:ratings]
+    # Get all movies that match the desired ratings filter
+    @checked_ratings = params[:ratings]
     @movies = Movie.movies_with_ratings(@checked_ratings)
 
     # Sort the movies
