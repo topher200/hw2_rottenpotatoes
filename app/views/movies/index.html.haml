@@ -11,7 +11,7 @@
         @checked_ratings.keys.include?(rating)
     - else
       = check_box_tag "ratings[#{rating}]", 'yes'
-  = submit_tag 'Refresh'
+  = submit_tag 'Refresh', :id => 'ratings_submit'
     
 %table#movies
   %thead
